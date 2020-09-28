@@ -1,6 +1,8 @@
 # Quote Of The Day App
 
-An app written in Flutter that generates famous quotes.
+A mobile application that generates famous quotes.
+
+Coded using Flutter, for Android and iOS.
 
 **Development in progress.**
 
