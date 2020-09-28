@@ -1,4 +1,4 @@
-# Quote of the day app
+# Quote Of The Day App
 
 An app written in Flutter that generates famous quotes.
 
