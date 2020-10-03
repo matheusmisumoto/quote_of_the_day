@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'quotes.dart';
 
 void main() {
   runApp(TheApp());
@@ -20,7 +21,17 @@ class TheApp extends StatelessWidget {
   }
 }
 
-class QuoteOfTheDay extends StatelessWidget {
+class QuoteOfTheDay extends StatefulWidget {
+  QuoteOfTheDay({Key key, this.title}) : super(key: key);
+  final String title;
+
+  @override
+  _QuoteOfTheDayState createState() => _QuoteOfTheDayState();
+}
+
+class _QuoteOfTheDayState extends State<QuoteOfTheDay> {
+  dynamic theQuote = QuotesDB().giveMeQuote();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,25 +48,29 @@ class QuoteOfTheDay extends StatelessWidget {
           children: [
             Spacer(flex: 1),
             Text(
-              "\"Some people see innovation as change, but we have never really seen it like that. It’s making things better.\"",
+              "\"${theQuote['quote']}\"",
               style: new TextStyle(fontSize: 22.0, height: 1.5),
             ),
             SizedBox(height: 25),
             Text(
-              "Tim Cook",
+              theQuote['author'],
               textAlign: TextAlign.right,
               style: new TextStyle(
                   fontSize: 20.0, fontWeight: FontWeight.bold, height: 2),
             ),
             Text(
-              "Apple CEO",
+              theQuote['description'],
               textAlign: TextAlign.right,
               style: new TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
             ),
             Spacer(flex: 1),
             RaisedButton(
               key: null,
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  theQuote = QuotesDB().giveMeQuote();
+                });
+              },
               child: Text("Generate new quote"),
             ),
           ],
