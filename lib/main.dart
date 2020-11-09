@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'quotes.dart';
 import 'dart:io' show Platform;
 
@@ -21,15 +22,45 @@ class AppleApp extends StatelessWidget {
 }
 
 class AppleScreen extends StatefulWidget {
-  AppleScreen({Key key, this.title}) : super(key: key);
-  final String title;
-
   @override
   _AppleScreen createState() => _AppleScreen();
 }
 
 class _AppleScreen extends State<AppleScreen> {
   dynamic theQuote = QuotesDB().giveMeQuote();
+
+  Future<void> _about() async {
+    return showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoActionSheet(
+          title: Text('About'),
+          message: Text(
+              'Experimental app developed by Matheus Misumoto, web developer and journalist based in Santos, Brazil.'),
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              child: Text('Visit my website'),
+              onPressed: () async {
+                const url = 'https://matheusmisumoto.jor.br';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              },
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            isDefaultAction: true,
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +100,13 @@ class _AppleScreen extends State<AppleScreen> {
                       fontSize: 18.0, fontStyle: FontStyle.italic),
                 ),
                 Spacer(flex: 1),
+                CupertinoButton(
+                  key: null,
+                  onPressed: () {
+                    _about();
+                  },
+                  child: Text("About this app"),
+                ),
                 CupertinoButton.filled(
                   key: null,
                   onPressed: () {
@@ -77,11 +115,6 @@ class _AppleScreen extends State<AppleScreen> {
                     });
                   },
                   child: Text("Generate new quote"),
-                ),
-                CupertinoButton(
-                  key: null,
-                  onPressed: () {},
-                  child: Text("About this app"),
                 ),
               ],
             ),
@@ -109,9 +142,6 @@ class AndroidApp extends StatelessWidget {
 }
 
 class QuoteOfTheDay extends StatefulWidget {
-  QuoteOfTheDay({Key key, this.title}) : super(key: key);
-  final String title;
-
   @override
   _QuoteOfTheDayState createState() => _QuoteOfTheDayState();
 }
@@ -151,7 +181,42 @@ class _QuoteOfTheDayState extends State<QuoteOfTheDay> {
               style: new TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
             ),
             Spacer(flex: 1),
-            RaisedButton(
+            TextButton(
+              key: null,
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => AlertDialog(
+                          title: Text('About'),
+                          content: SingleChildScrollView(
+                              child: ListBody(
+                            children: <Widget>[
+                              Text(
+                                  'Experimental app developed by Matheus Misumoto, web developer and journalist based in Santos, Brazil.')
+                            ],
+                          )),
+                          actions: <Widget>[
+                            ElevatedButton(
+                              child: Text('Visit my website'),
+                              onPressed: () async {
+                                const url = 'https://matheusmisumoto.jor.br';
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                            ),
+                            TextButton(
+                                child: Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                })
+                          ],
+                        )));
+              },
+              child: Text("About this app"),
+            ),
+            ElevatedButton(
               key: null,
               onPressed: () {
                 setState(() {
